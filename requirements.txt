@@ -1,0 +1,12 @@
+fastapi
+opencv-python
+mediapipe
+pyttsx3
+passlib[bcrypt]
+python-dotenv
+python-multipart
+uvicorn[standard]
+websockets
+wsproto
+bcrypt
+python-jose

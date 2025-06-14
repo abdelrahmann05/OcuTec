@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="./images/logo.svg" >
+    <link rel="stylesheet" href="./component.css">
+    <link rel="stylesheet" href="./style.css">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
+    <link rel ="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils"></script>
+    
+    <title>camera</title>
+</head>
+<body>
+
+  <header>
+    <div class="container">
+      
+            <div class="logo1">
+                <a href="https://new.deltauniv.edu.eg/ar/home/index" target="_blank" rel="noopener noreferrer">
+                  <img src="images/logo/DT.png" alt="University">
+                </a>
+            </div>
+            <div class="headerlogo">
+              <a href="./index.html">
+                <h1>O</h1>
+                <h1>c</h1>
+                <h1>u</h1>
+                <img src="./images/logo.svg">
+                <h1>T</h1>
+                <h1>e</h1>
+                <h1>c</h1>
+                <h1>h</h1>
+              </a>
+            </div>
+            <div class="uyuyu">
+
+              
+              <div id="signup-btn" class="sign-up">
+                <div class="button">
+                  <a href="./signup/signup.html">Sign Up!</a>
+                </div>
+              </div>
+              
+              <div class="menu">
+                <span class="menu-span top"></span>
+                <span class="menu-span middle"></span>
+                <span class="menu-span bottom"></span>
+              </div>
+              
+              <div id="admin-dashboard-link" style="display: none;">
+                <a href="./dashboard/Dshboard.html">
+                  <i class="fa-solid fa-user"></i>
+                </a>
+              </div>
+              
+
+            </div>
+
+            <nav class="nav">
+              <a href="./index.html#About_us">About us</a>
+              <a href="./index.html#services">Service</a>
+              <a href="./market.html">Market</a>
+              <a href="./camera.html">Start Use</a>
+              <a href="./market.html#Contact">Contact</a>
+            </nav> 
+        </div>
+   </header>
+    
+    <marquee behavior="scroll" direction="ltr">
+        <p>Now you can try it! Enjoy! 😊</p>
+    </marquee>
+    <section class="main-camera" id="main-camera">  
+        <h1 >Access Camera and Microphone</h1>
+        <div class="camera">
+          <div id="video-containerr" >
+            
+             
+              
+              <div class="imgmorse" >
+                <img class="morseimg" src="./images/download.jpeg" alt="morse code">
+              </div>
+
+
+              
+                <div class="dd">
+                  <video id="video" autoplay playsinline ></video>
+                  <canvas id="debug-canvas"></canvas>
+                  
+                  <div class="controls">
+                    <button id="camera-toggle" class="control-btn">
+                      <i class="fa-solid fa-video"></i>
+                    </button>
+                    <button id="mic-toggle" class="control-btn">
+                      <i class="fa-solid fa-microphone"></i>
+                    </button>
+                  </div>
+                  <div class="eye-status-overlay">
+                      <span id="eye-status">Eye Status: Not Detected</span>
+                      <span id="morse-code">Morse: </span>
+                  </div>
+                </div>
+              
+              
+        </div>
+        
+
+          <div class="morse-voice" >
+            <h2>Speak in Morse code🎙️</h2>     
+            <div class="eye-text-container">
+              
+              <p><strong>👓Text from Glasses </strong><span id="voiceText">... جاري التحميل</span></p>
+            </div>
+            <div class="eye-text-container">
+              <p><strong>👁️Text from the eye </strong> <span id="gazeText"></span></p>
+              <p><strong>🪧morse code</strong> <span id="morseFromGaze"></span></p>
+            </div>
+            
+        </div>
+        
+      </div>
+      <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script>
+    // إعدادات Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBke3xbwKGqKdl6JK76tO2Ep3rbTtL3mQM",
+      authDomain: "lolxd-f68cc.firebaseapp.com",
+      databaseURL: "https://lolxd-f68cc-default-rtdb.firebaseio.com",
+      projectId: "lolxd-f68cc",
+      storageBucket: "lolxd-f68cc.appspot.com",
+      messagingSenderId: "622692682211",
+      appId: "1:622692682211:web:161eae467c471d9f9238d6"
+    };
+
+    // تهيئة Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // استماع للتغييرات على كلمة Morse
+    db.ref("Morse/words").on("value", (snapshot) => {
+      const word = snapshot.val();
+      document.getElementById("voiceText").textContent = word || "لا يوجد بيانات حالياً";
+    });
+  </script>
+<script>
+const video = document.getElementById('video');
+const canvas = document.getElementById('debug-canvas');
+const ctx = canvas.getContext('2d');
+let ws;
+let isConnected = false;
+let stream = null;
+let isCameraOn = true;
+let isMicOn = true;
+let lastMorseTime = 0;
+let lastMorseCode = '';
+let morseTimeout = null;
+
+const cameraToggle = document.getElementById('camera-toggle');
+const micToggle = document.getElementById('mic-toggle');
+
+async function setupCamera() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { width: 640, height: 480 },
+            audio: true
+        });
+        video.srcObject = stream;
+        return new Promise((resolve) => {
+            video.onloadedmetadata = () => {
+                resolve(video);
+            };
+        });
+    } catch (error) {
+        console.error('Error accessing camera:', error);
+        alert('Error accessing camera. Please make sure you have granted camera permissions.');
+    }
+}
+
+cameraToggle.addEventListener('click', () => {
+    if (stream) {
+        const videoTrack = stream.getVideoTracks()[0];
+        if (videoTrack) {
+            if (isCameraOn) {
+                videoTrack.enabled = false;
+                cameraToggle.innerHTML = '<i class="fa-solid fa-video-slash"></i>';
+            } else {
+                videoTrack.enabled = true;
+                cameraToggle.innerHTML = '<i class="fa-solid fa-video"></i>';
+            }
+            isCameraOn = !isCameraOn;
+        }
+    }
+});
+
+micToggle.addEventListener('click', () => {
+    if (stream) {
+        const audioTrack = stream.getAudioTracks()[0];
+        if (audioTrack) {
+            if (isMicOn) {
+                audioTrack.enabled = false;
+                micToggle.innerHTML = '<i class="fa-solid fa-microphone-slash"></i>';
+            } else {
+                audioTrack.enabled = true;
+                micToggle.innerHTML = '<i class="fa-solid fa-microphone"></i>';
+            }
+            isMicOn = !isMicOn;
+        }
+    }
+});
+
+function connectWebSocket() {
+    ws = new WebSocket('ws://localhost:8000/ws');
+    
+    ws.onopen = () => {
+        console.log('WebSocket connected');
+        isConnected = true;
+    };
+    
+    ws.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        
+        // Update eye status
+        document.getElementById('eye-status').textContent = `Eye Status: ${data.eye_status}`;
+        
+        // Update morse code
+        document.getElementById('morse-code').textContent = `Morse: ${data.morse}`;
+        
+        // Update gaze text immediately
+        if (data.word) {
+            document.getElementById('gazeText').textContent = data.word;
+        }
+        
+        // Handle morse code with shorter timing
+        if (data.morse && data.morse !== '') {
+            const currentTime = Date.now();
+            
+            // Clear previous timeout if exists
+            if (morseTimeout) {
+                clearTimeout(morseTimeout);
+            }
+            
+            // If morse code changed, update lastMorseCode and lastMorseTime
+            if (data.morse !== lastMorseCode) {
+                lastMorseCode = data.morse.trim();
+                lastMorseTime = currentTime;
+            }
+            
+            // Set new timeout to add morse code after 1 second of no change
+            morseTimeout = setTimeout(() => {
+                const morseElement = document.getElementById('morseFromGaze');
+                const currentMorse = morseElement.textContent.trim();
+                
+                // Always update the morse code after timeout
+                const newMorse = currentMorse ? `${currentMorse}/${lastMorseCode}` : lastMorseCode;
+                morseElement.textContent = newMorse;
+                
+                // Reset the last morse code after adding it
+                lastMorseCode = '';
+            }, 1000); 
+        }
+        
+        // Update debug frame if available
+        if (data.debug_frame) {
+            const img = new Image();
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            img.src = 'data:image/jpeg;base64,' + data.debug_frame;
+        }
+    };
+    
+    ws.onclose = () => {
+        console.log('WebSocket disconnected');
+        isConnected = false;
+        setTimeout(connectWebSocket, 5000);
+    };
+    
+    ws.onerror = (error) => {
+        console.error('WebSocket error:', error);
+    };
+}
+
+async function init() {
+    try {
+        await setupCamera();
+        connectWebSocket();
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Start sending frames to server
+        setInterval(() => {
+            if (isConnected && video.readyState === video.HAVE_ENOUGH_DATA) {
+                const canvas = document.createElement('canvas');
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(video, 0, 0);
+                
+                const imageData = canvas.toDataURL('image/jpeg').split(',')[1];
+                ws.send(JSON.stringify({ image: imageData }));
+            }
+        }, 100);
+    } catch (error) {
+        console.error('Initialization error:', error);
+    }
+}
+
+init();
+</script>
+
+      </section> 
+
+      <footer class="footer">
+        <div class="ocutech">
+          <img src="./images/logo.svg">
+          <p class="footer-title"><span>OcuTech</span></p>
+        </div>
+        <div class="connect">
+          <h2>Our Value</h2>
+          <a href="./index.html#About_us">About us</a>
+          <a href="./index.html#services">Service</a>
+          <a href="./market.html#Contact">Contact</a>
+        </div>
+        <div class="social-icons">
+          <h2>Follow us</h2>
+            <a href="https://www.facebook.com/deltauniv/"><i class="fa-brands fa-facebook-f"></i><p>Facebook</p></a>
+            <a href="https://www.instagram.com/deltauniversity?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="><i class="fa-brands fa-instagram"></i><p>Instagram</p></a>
+            <a href="https://www.linkedin.com/school/delta-university-for-science-and-technology/"><i class="fa-brands fa-linkedin-in"></i><p>LinkedIn</p></a>
+        </div>
+        <div class="connect">
+          <h2>Get Connect</h2>
+          <p>(+20) 1017314060</p>
+          <p>abdelrahman.naggar2005@gmail.com</p>
+        </div>
+      </footer>
+        <script src="./component.js"></script>
+        <script type="module" src="./auth-ui.js"></script>
+        <script>
+            ScrollReveal().reveal('.animate-on-scroll', {
+                delay: 200,
+                distance: '20px',
+                origin: 'bottom',
+                easing: 'ease-in-out',
+                interval: 100
+            });
+        </script>
+
+</body>
+</html>

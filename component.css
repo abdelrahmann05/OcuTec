@@ -1,0 +1,401 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    font-family: "Poppins", serif;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 0;
+    -webkit-tap-highlight-color: transparent;
+    text-decoration: none;
+    color: inherit;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+marquee p {
+    color: #fff;
+    font-size: 18px;
+}
+
+
+@keyframes ticker {   /*لإنشاء تحريك (Animation)*/
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+}
+
+
+body{
+    background-color: #1a1f23;
+    margin: 0;
+    padding: 0;
+    padding-top: 80px;
+    overflow-x: hidden;
+    font-family: Arial, sans-serif;
+    transition: all 0.4s ease;
+}
+
+
+
+header{
+    background-color: #1a1f23;
+    box-shadow: 0 0 10px #c5c5c5;
+    width : 100%;
+    position:fixed;   
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 0;
+    z-index: 999; 
+    padding: 0 5%;
+    min-height: 70px;
+}
+
+header .container {
+    width : 100%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+header a {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+h1 {
+    color: #fff;
+    text-transform: uppercase;
+    font-size: 30px;
+    text-align: center; 
+    font-weight: 600;
+}
+
+.logo1 a img {
+    width: 60px;
+}
+
+.logo1 {
+    margin-top: 7px;
+}
+
+.nav {
+    display: none;
+    align-items: center;
+    position: absolute;
+    top:58px;
+    right: 0;
+    background-color: #fff;
+    flex-direction: column;
+    padding: 20px 0;
+    box-shadow: 0 0 10px #e9e9e9;
+    border-radius: 12px;
+    width: 150px;
+    padding: 10px;
+}
+
+.nav.opened {
+    display: flex;
+}
+
+.nav a {
+    text-decoration: none;
+    color: #000;
+    background-color: #fff;
+    padding: 9px 7px;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+}
+
+.nav a:hover {
+    background: rgb(50,56,62); 
+    color: #fff;
+}
+
+.nav button {
+    text-decoration: none;
+    color: #000;
+    background-color: #fff;
+    padding: 9px 7px;
+    border-radius: 8px;
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+}
+
+.nav button:hover {
+    background: rgb(161, 14, 14); 
+    color: #fff;
+}
+
+header .menu {
+    color:#fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    position: relative;
+    width: 18px;
+    height: 18px;
+    border-radius: 50px;
+}
+
+.fa-user{
+    color:#fff;
+    font-size: 1.2em;
+}
+
+header .menu span {
+    height: 2px;
+    width: 20px;
+    line-height: 0;
+    background-color: #fff;
+    border-radius: 50px;
+    text-align: start;
+    transition: 0.5s;
+    position: absolute;
+    right: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.uyuyu{
+    color:#fff;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+}
+
+.uyuyu .sign-up .button a {
+    display: inline-block;
+    color: white;
+    padding: 5px 9px;
+    background-color: #31689d;
+    font-size: 14px;
+    border-radius: 12px;
+    transition: 0.5s all ease-in-out;
+}
+
+.uyuyu .sign-up .button a:hover {
+    background-color: #285782;
+    transform: translateY(-3px);
+}
+
+header .menu span.top {
+    top: 0;
+}
+
+header .menu span.middle {
+    width: 14px;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+header .menu span.bottom {
+    width: 8px;
+    bottom: 0;
+
+}
+
+header .menu span.top.opened {
+    width: 22px;
+    top: 50%;
+    transform: rotate(45deg);
+}
+
+header .menu span.middle.opened {
+    width: 0;
+}
+
+header .menu span.bottom.opened {
+    width: 22px;
+    top: 50%;
+    transform: rotate(-45deg);
+}
+
+.header-content {
+    display: flex;
+    align-items: flex-start; 
+    gap: 20px; 
+}
+
+.headerlogo a{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap:10px;
+    align-items: center;
+}
+
+.headerlogo a img {
+    width: 60px;
+}
+
+.footer {
+    background-color: #1a1f23;
+    color: #fff;
+    padding: 3em;
+    display: flex;
+    justify-content: space-between;
+}
+
+.ocutech{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:0px;
+}
+
+.footer-title {
+    font-size: 2em;
+    font-weight: 800;
+}
+
+.footer-title span {
+    color: #fff;
+}
+
+.footer .social-icons a{
+    display: flex;
+    flex-direction: row;
+    justify-items: start;
+    font-size: 1.3em;
+    padding: 0 12px 0 0;
+}
+
+.footer .social-icons a:hover{
+    color:#b1bac3;
+}
+
+.footer .social-icons a p{
+    font-size: 0.7em;
+    padding-left: 15px;
+}
+
+.social-icons h2 {
+    color: #4c98df;
+    margin-bottom:10px;
+}
+
+.connect{
+    display:flex;
+    flex-direction: column;
+    gap:25px;
+}
+
+.connect h2 {
+    color: #4c98df;
+    margin-bottom:10px;
+}
+
+.connect p{
+    font-size: 1.2em;
+}
+
+.connect a:hover{
+    color:#b1bac3;
+}
+
+.social-icons {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.social-icons a {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+}
+
+.social-icons a img {
+    width: 16px;
+} 
+.ocutech img {
+    width:100%;
+}
+
+@media (max-width: 1200px) {
+    .footer{
+        padding: 20px 10px;
+        justify-content: space-between;
+        gap:20px
+    }
+    
+    .ocutech p{
+        font-size: 1.5em;
+    }
+    .connect h2 {
+        font-size: 1.1em;
+        color: #4c98df;
+        margin-bottom: 0px;
+    }
+    .social-icons h2 {
+        font-size: 1.1em;
+        color: #4c98df;
+        margin-bottom: 0px;
+    }
+    .connect p {
+         font-size: 1em;
+    }
+}
+
+@media (max-width:668px) {
+    marquee{
+        padding: 0;
+        max-width: 100%;
+         width: 100%;
+    }
+
+    marquee p {
+        color: #fff;
+        font-size: 18px;
+    }
+    .logo1 a img {
+        width: 50px;
+    }
+    .footer{
+        width:100%;
+        flex-direction: column;
+        gap:50px;
+        align-items: start;
+        padding: 1em;
+    }
+
+    .headerlogo a h1 {
+        font-size: 1.2em;
+    }
+    
+    .headerlogo a img {
+      width: 30px;
+    }
+
+    .ocutech p{
+        font-size: 1.8em;
+    }
+    .connect h2 {
+        color: #4c98df;
+        margin-bottom: 0px;
+    }
+    .social-icons h2 {
+        color: #4c98df;
+        margin-bottom: 0px;
+    }
+
+    .connect p {
+         font-size: 1em;
+    }
+    
+    .headerlogo  a {
+        gap:3%;
+    }
+    .uyuyu {
+        gap:8px;
+    }
+}
